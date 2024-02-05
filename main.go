@@ -1,7 +1,11 @@
+/*
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+
+*/
 package main
 
-import "fmt"
+import "github.com/paulsavides/palworld-manager/cmd"
 
 func main() {
-	fmt.Println("hi :)")
+	cmd.Execute()
 }
