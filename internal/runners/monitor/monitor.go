@@ -20,6 +20,10 @@ type MonitorOptions struct {
 func Execute(options MonitorOptions) error {
 	logger := slog.Default()
 
+	if options.DryRun {
+		logger.Info("Running monitor command with dry run enabled, will not take any actions")
+	}
+
 	rconClient, err := clients.Rcon(options.RconClient)
 	if err != nil {
 		return err

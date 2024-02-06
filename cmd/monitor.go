@@ -25,6 +25,7 @@ var monitorCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		service, _ := cmd.Flags().GetString("service-name")
 		memoryThreshold, _ := cmd.Flags().GetInt("memory-threshold")
+		dryRun, _ := cmd.Flags().GetBool("dry-run")
 
 		opts := monitor.MonitorOptions{
 			RconClient: clients.RconClientOptions{
@@ -34,6 +35,7 @@ var monitorCmd = &cobra.Command{
 			},
 			ServiceName:     service,
 			MemoryThreshold: memoryThreshold,
+			DryRun:          dryRun,
 		}
 
 		err := monitor.Execute(opts)
