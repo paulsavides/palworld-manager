@@ -31,8 +31,20 @@ jobs:
     - name: Check Artifact
       run: palworld-manager help
 
-    - name: Upload Artifact
-      uses: action/upload-artifact@v4
+    - name: Upload Versioned Artifact
+      uses: shallwefootball/s3-upload-action@v1.3.3
       with:
-        name: palworld-manager-${{ github.run_id }}
-        path: palworld-manager
+        aws_key_id: ${{ secrets.AWS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        aws_bucket: ${{ secrets.AWS_BUCKET }}
+        source_dir: 'palworld-manager'
+        destination_dir: build/palworld-manager-${{ github.run_id }}
+
+    - name: Upload Release Artifact
+      uses: shallwefootball/s3-upload-action@v1.3.3
+      with:
+        aws_key_id: ${{ secrets.AWS_KEY_ID }}
+        aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+        aws_bucket: ${{ secrets.AWS_BUCKET }}
+        source_dir: 'palworld-manager'
+        destination_dir: release/palworld-manager
