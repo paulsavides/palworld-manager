@@ -48,15 +48,5 @@ func init() {
 
 	monitorCmd.Flags().StringP("service-name", "s", "palworld", "The name of the systemd service")
 	monitorCmd.Flags().IntP("memory-threshold", "m", 95, "Server memory threshold which will trigger a restart")
-	monitorCmd.Flags().BoolP("broadcast-countdown", "b", true, "Broadcast countdown using rcon (requires rcon connection to be set in config)")
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// monitorCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// monitorCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	monitorCmd.Flags().BoolP("dry-run", "d", false, "Just log intentions, don't actually run restarts")
 }
