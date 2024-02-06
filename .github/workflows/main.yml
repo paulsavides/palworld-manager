@@ -39,6 +39,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1 # doesn't really matter for s3
 
     - name: Upload Versioned Artifact
       run: aws s3 cp ./palworld-manager s3://${{ secrets.AWS_BUCKET }}/build/palworld-manager-${{ github.run_id }}
