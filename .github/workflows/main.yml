@@ -25,7 +25,10 @@ jobs:
       run: go test -v ./...
 
     - name: Create Artifact
-      run: go build -o palworld-manager .
+      run: go build -o palworld-manager main.go
+
+    - run: pwd
+    - run: ls -la
 
     # todo: how to verify the artifact?
     - name: Check Artifact
