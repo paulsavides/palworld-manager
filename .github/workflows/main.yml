@@ -41,8 +41,8 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     - name: Upload Versioned Artifact
-      run: aws s3 cp ./palworld-manager s3://${{ secretes.AWS_BUCKET }}/build/palworld-manager-${{ github.run_id }}
+      run: aws s3 cp ./palworld-manager s3://${{ secrets.AWS_BUCKET }}/build/palworld-manager-${{ github.run_id }}
 
     - name: Upload Release Artifact
-      run: aws s3 cp ./palworld-manager s3://${{ secretes.AWS_BUCKET }}/release/palworld-manager
+      run: aws s3 cp ./palworld-manager s3://${{ secrets.AWS_BUCKET }}/release/palworld-manager
 
