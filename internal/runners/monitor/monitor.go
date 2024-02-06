@@ -11,10 +11,11 @@ import (
 )
 
 type MonitorOptions struct {
-	RconClient      clients.RconClientOptions
-	MemoryThreshold int
-	ServiceName     string
-	DryRun          bool
+	RconClient       clients.RconClientOptions
+	MemoryThreshold  int
+	ServiceName      string
+	DryRun           bool
+	RequireBroadcast bool
 }
 
 func Execute(options MonitorOptions) error {
@@ -23,13 +24,6 @@ func Execute(options MonitorOptions) error {
 	if options.DryRun {
 		logger.Info("Running monitor command with dry run enabled, will not take any actions")
 	}
-
-	rconClient, err := clients.Rcon(options.RconClient)
-	if err != nil {
-		return err
-	}
-
-	defer rconClient.Close()
 
 	started, err := startServiceIfNeeded(options.ServiceName, options.DryRun)
 	if started {
@@ -48,7 +42,20 @@ func Execute(options MonitorOptions) error {
 
 	if inuse > float64(options.MemoryThreshold) {
 		logger.Info("Determined that a restart of palworld is needed... restarting now")
-		broadcastRestartWarning(rconClient, int(inuse), options.MemoryThreshold, options.DryRun)
+
+		rconClient, err := clients.Rcon(options.RconClient)
+		if err != nil {
+			if options.RequireBroadcast {
+				logger.Error("Unable to connect over rcon to server")
+				return err
+			} else {
+				logger.Warn("Unable to connect over rcon to broadcast server restart, requireBroadcast false so permitting failure", "err", err)
+			}
+		} else {
+			defer rconClient.Close()
+			broadcastRestartWarning(rconClient, int(inuse), options.MemoryThreshold, options.DryRun)
+		}
+
 		if err := restartService(options.ServiceName, options.DryRun); err != nil {
 			return err
 		}

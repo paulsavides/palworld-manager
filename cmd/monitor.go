@@ -26,6 +26,7 @@ var monitorCmd = &cobra.Command{
 		service, _ := cmd.Flags().GetString("service-name")
 		memoryThreshold, _ := cmd.Flags().GetInt("memory-threshold")
 		dryRun, _ := cmd.Flags().GetBool("dry-run")
+		requireBroadcast, _ := cmd.Flags().GetBool("require-broadcast")
 
 		opts := monitor.MonitorOptions{
 			RconClient: clients.RconClientOptions{
@@ -33,9 +34,10 @@ var monitorCmd = &cobra.Command{
 				Port:     viper.GetString("rcon.port"),
 				Password: viper.GetString("rcon.password"),
 			},
-			ServiceName:     service,
-			MemoryThreshold: memoryThreshold,
-			DryRun:          dryRun,
+			ServiceName:      service,
+			MemoryThreshold:  memoryThreshold,
+			DryRun:           dryRun,
+			RequireBroadcast: requireBroadcast,
 		}
 
 		err := monitor.Execute(opts)
@@ -50,5 +52,6 @@ func init() {
 
 	monitorCmd.Flags().StringP("service-name", "s", "palworld", "The name of the systemd service")
 	monitorCmd.Flags().IntP("memory-threshold", "m", 95, "Server memory threshold which will trigger a restart")
-	monitorCmd.Flags().BoolP("dry-run", "d", false, "Just log intentions, don't actually run restarts")
+	monitorCmd.Flags().Bool("dry-run", false, "Just log intentions, don't actually run restarts")
+	monitorCmd.Flags().Bool("require-broadcast", false, "Fail script if rcon broadcast of restart message fails")
 }
