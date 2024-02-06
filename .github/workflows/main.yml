@@ -29,11 +29,14 @@ jobs:
     - name: Create Artifact
       run: go build -o palworld-manager main.go
 
-    - run: ls -la
-
     # todo: how to verify the artifact?
     - name: Check Artifact
       run: ./palworld-manager help
+
+    - run: mkdir build
+    - run: mkdir releases
+    - run: cp ./palworld-manager build/palworld-manager-${{ github.run_id }}
+    - run: cp ./palworld-manager releases/
 
     - name: Upload Versioned Artifact
       uses: shallwefootball/s3-upload-action@v1.3.3
@@ -41,8 +44,8 @@ jobs:
         aws_key_id: ${{ secrets.AWS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
         aws_bucket: ${{ secrets.AWS_BUCKET }}
-        source_dir: ./palworld-manager
-        destination_dir: build/palworld-manager-${{ github.run_id }}
+        source_dir: releases/
+        destination_dir: releases/
 
     - name: Upload Release Artifact
       uses: shallwefootball/s3-upload-action@v1.3.3
@@ -50,5 +53,5 @@ jobs:
         aws_key_id: ${{ secrets.AWS_KEY_ID }}
         aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
         aws_bucket: ${{ secrets.AWS_BUCKET }}
-        source_dir: ./palworld-manager
-        destination_dir: release/palworld-manager
+        source_dir: build/
+        destination_dir: build/
