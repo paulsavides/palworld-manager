@@ -1,19 +1,31 @@
 package rcon
 
 import (
-	"fmt"
+	"log/slog"
 
 	"github.com/paulsavides/palworld-manager/internal/clients"
 )
 
-func RunBroadcast(options clients.RconClientOptions) {
-	client, err := clients.Rcon(options)
+type RconOptions struct {
+	RconClient clients.RconClientOptions
+	Command    string
+}
+
+func Execute(options RconOptions) {
+	logger := slog.Default()
+
+	client, err := clients.Rcon(options.RconClient)
 	if err != nil {
-		fmt.Println(err.Error())
+		logger.Error("Rcon connection not established successfully", "err", err.Error())
 		return
 	}
 
 	defer client.Close()
 
-	client.Broadcast("1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9 1 2 3 4 5 6 7 8 9")
+	out, err := client.Execute(options.Command)
+	if err != nil {
+		logger.Error("Rcon command not run successfully", "err", err)
+	} else {
+		logger.Info(out)
+	}
 }

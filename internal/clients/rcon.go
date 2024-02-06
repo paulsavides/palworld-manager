@@ -20,7 +20,8 @@ type rconClient struct {
 
 type RconClient interface {
 	Close()
-	Broadcast(message string)
+	Execute(command string) (string, error)
+	Broadcast(message string) error
 }
 
 func Rcon(options RconClientOptions) (RconClient, error) {
@@ -51,7 +52,7 @@ func (m *rconClient) Close() {
 	m.connection.Close()
 }
 
-func (m *rconClient) Broadcast(message string) {
+func (m *rconClient) Broadcast(message string) error {
 	words := strings.Split(message, " ")
 
 	// determined this through experimentation, palworld will
@@ -89,17 +90,25 @@ func (m *rconClient) Broadcast(message string) {
 
 	for _, line := range toBroadcast {
 		joinedLine := strings.Join(line, string(spaceChar))
-		execute(m.connection, fmt.Sprintf("Broadcast %s", joinedLine))
+		_, err := execute(m.connection, fmt.Sprintf("Broadcast %s", joinedLine))
+		if err != nil {
+			return err
+		}
 	}
+
+	return nil
 }
 
-func execute(connection *rcon.Conn, command string) (string, bool) {
+func (m *rconClient) Execute(command string) (string, error) {
+	output, err := execute(m.connection, command)
+	return output, err
+}
+
+func execute(connection *rcon.Conn, command string) (string, error) {
 	result, err := connection.Execute(command)
 	if err != nil {
-		fmt.Println(err.Error())
-		return "", false
+		return "", err
 	} else {
-		return strings.TrimRight(result, string('\n')), true
+		return strings.TrimRight(result, string('\n')), nil
 	}
-
 }
