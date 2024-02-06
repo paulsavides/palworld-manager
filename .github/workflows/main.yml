@@ -1,0 +1,38 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: main
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v ./...
+
+    - name: Create Artifact
+      run: go build -o palworld-manager .
+
+    # todo: how to verify the artifact?
+    - name: Check Artifact
+      run: palworld-manager help
+
+    - name: Upload Artifact
+      uses: action/upload-artifact@v4
+      with:
+        name: palworld-manager-${{ github.run_id }}
+        path: palworld-manager
