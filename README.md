@@ -1,6 +1,6 @@
 ## Installation
 
-Only linux x64 binary available right now
+This has only been tested on ubuntu 22. It also requires palworld being run as a systemd service.
 
 Download
 ```
@@ -19,3 +19,17 @@ Check logs
 ```
 tail -f /var/log/palworld-manager.log
 ```
+
+## RCON Config File
+
+This is required to use the `rcon` command or to enable broadcasting to the server for restarts
+
+Create a file ~/.palworld-manager.yaml
+```
+rcon:
+    host: localhost
+    port: <rcon_port>
+    password: <password>
+```
+
+From there, verify it's working by calling `palworld-manager rcon Info`
